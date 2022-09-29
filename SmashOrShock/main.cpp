@@ -1,5 +1,7 @@
 #include <Windows.h>
 #include <tchar.h>
+#include <memory>
+#include "Game.h"
 
 const TCHAR szWindowClass[] = _T("Smash or Shock!");
 const int window_width = 1280;
@@ -25,7 +27,7 @@ int WINAPI WinMain(
     _In_ LPSTR     lpCmdLine,
     _In_ int       nCmdShow)
 {
-    WNDCLASSEX wcex;
+    WNDCLASSEX wcex = {};
 
     wcex.cbSize = sizeof(WNDCLASSEX);
     wcex.style = CS_HREDRAW | CS_VREDRAW;
@@ -78,6 +80,10 @@ int WINAPI WinMain(
         return 1;
     }
 
+    //ÉQÅ[ÉÄÉNÉâÉXèâä˙âª
+    std::unique_ptr<Game> game;
+    game->initialize();
+
     ShowWindow(hWnd, nCmdShow);
 
     MSG msg;
@@ -87,14 +93,14 @@ int WINAPI WinMain(
             DispatchMessage(&msg);
         }
 
-        if (msg.message == WM_QUIT) {
+        if (msg.message == WM_QUIT || game->getIsGameRunning() == false) {
             break;
         }
 
-
+        game->draw();
 
     }
 
     UnregisterClass(wcex.lpszClassName, wcex.hInstance);
-    return (int)msg.wParam;
+    return  (int)msg.wParam;
 }

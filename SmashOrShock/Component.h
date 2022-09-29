@@ -1,11 +1,11 @@
 #pragma once
-class Scene
+
+class Component
 {
 public:
-    virtual void Update() const = 0;
+    virtual void Update() = 0;
     virtual void Draw() const = 0;
 
 private:
-
 };
 
