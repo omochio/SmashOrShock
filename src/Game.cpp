@@ -1,9 +1,5 @@
 #include "Game.h"
 
-Game::Game()
-{
-}
-
 Game::~Game()
 {
 }
@@ -20,7 +16,7 @@ void Game::update()
 {
 }
 
-bool Game::getIsGameRunning()
+const bool Game::getIsGameRunning()
 {
-    return _isGameRunning;
+    return m_isGameRunning;
 }

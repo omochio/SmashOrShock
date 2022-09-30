@@ -81,7 +81,7 @@ int WINAPI WinMain(
     }
 
     //ƒQ[ƒ€ƒNƒ‰ƒX‰Šú‰»
-    std::unique_ptr<Game> game;
+    auto game = std::make_unique<Game>();
     game->initialize();
 
     ShowWindow(hWnd, nCmdShow);
@@ -93,9 +93,16 @@ int WINAPI WinMain(
             DispatchMessage(&msg);
         }
 
+        
         if (msg.message == WM_QUIT || game->getIsGameRunning() == false) {
             break;
         }
+        
+        /*
+        if (msg.message == WM_QUIT) {
+            break;
+        }
+        */
 
         game->draw();
 

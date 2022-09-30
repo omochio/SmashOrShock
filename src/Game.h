@@ -2,14 +2,14 @@
 class Game
 {
 public:
-    Game();
+    Game() : m_isGameRunning(true) {}
     ~Game();
     void initialize();
     void draw();
     void update();
-    bool getIsGameRunning();
+    const bool getIsGameRunning();
 
 private:
-    bool _isGameRunning = true;
+    bool m_isGameRunning;
 };
 

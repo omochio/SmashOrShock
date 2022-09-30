@@ -5,6 +5,9 @@
 #include <wrl.h>
 #include "Component.h"
 
+//#pragma comment(lib, "d3d12.lib")
+//#pragma comment(lib, "dxgi.lib")
+
 class RendererComponent :
     public Component
 {
