@@ -1,16 +1,22 @@
 #include "GameObject.h"
 
+void GameObject::initialize()
+{
+    
+}
+
+void GameObject::draw()
+{
+    //renderer->prepare(modelPath);
+    m_renderer->render();
+}
+
 DirectX::XMVECTOR GameObject::getPosition()
 {
-    return _position;
+    return m_position;
 }
 
-void GameObject::addComponent(std::string name, Component* component)
+Renderer* GameObject::getRenderer()
 {
-    _ComponentList.insert(std::make_pair(name, component));
-}
-
-std::shared_ptr<Component> GameObject::getComponent(std::string name)
-{
-    return _ComponentList.at(name);
+    return m_renderer.get();
 }

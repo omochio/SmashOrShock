@@ -1,41 +1,29 @@
 #pragma once
 #include <DirectXMath.h>
 #include <string>
-#include <unordered_map>
 #include <memory>
-#include "Component.h"
+#include "Renderer.h"
 
 class GameObject
 {
 public:
+    void initialize();
+    virtual void update() = 0;
+    void draw();
+
     /// <summary>
     /// 現在の座標を取得
     /// </summary>
     /// <returns>座標</returns>
     DirectX::XMVECTOR getPosition();
 
-    virtual void init() = 0;
-    virtual void update() = 0;
-    virtual void draw() const = 0;
-
 protected:
-    /// <summary>
-    /// コンポーネントを取得
-    /// </summary>
-    /// <param name="name">コンポーネントの名前</param>
-    /// <returns>指定したコンポーネント</returns>
-    std::shared_ptr<Component> getComponent(std::string name);
+    Renderer* getRenderer();
 
-    /// <summary>
-    /// コンポーネントを追加
-    /// </summary>
-    /// <param name="name">コンポーネントの名前</param>
-    /// <param name="component">コンポーネントのポインタ</param>
-    void addComponent(std::string name, Component* component);
-
-    //位置
-    DirectX::XMVECTOR _position = { 0.0f, 0.0f, 0.0f, 1.0f };
-    //コンポーネントリスト
-    std::unordered_map<std::string, std::shared_ptr<Component>> _ComponentList;
+    //Position
+    DirectX::XMVECTOR m_position = { 0.0f, 0.0f, 0.0f, 1.0f };
+    //Renderer
+    std::unique_ptr<Renderer> m_renderer;
+    std::string m_modelPath;
 };
 

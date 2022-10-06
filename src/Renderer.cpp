@@ -1,6 +1,6 @@
-#include "RendererComponent.h"
+#include "Renderer.h"
 
-void RendererComponent::initialize(HWND hwnd)
+void Renderer::initialize(HWND hwnd)
 {
     HRESULT hr;
     UINT dxgiFlags = 0;
@@ -121,11 +121,9 @@ void RendererComponent::initialize(HWND hwnd)
 
     m_viewport = CD3DX12_VIEWPORT(0.0f, 0.0f, float(width), float(height));
     m_scissorRect = CD3DX12_RECT(0, 0, LONG(width), LONG(height));
-
-    prepare(modelFilePath);
 }
 
-void RendererComponent::render()
+void Renderer::render()
 {
     m_frameIndex = m_swapchain->GetCurrentBackBufferIndex();
 
@@ -184,12 +182,12 @@ void RendererComponent::render()
     waitPreviousFrame();
 }
 
-void RendererComponent::setCommands()
+void Renderer::setCommands()
 {
     
 }
 
-void RendererComponent::waitPreviousFrame()
+void Renderer::waitPreviousFrame()
 {
     auto& fence = m_frameFence[m_frameIndex];
     const auto currentValue = ++m_frameFenceValues[m_frameIndex];

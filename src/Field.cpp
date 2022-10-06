@@ -2,25 +2,16 @@
 
 Field::Field()
 {
+    m_modelPath = "Resources/Field";
 }
 
 Field::~Field()
 {
 }
 
-void Field::init()
-{
-        
-}
-
 void Field::update()
 {
     
-}
-
-void Field::draw()
-{
-
 }
 
 

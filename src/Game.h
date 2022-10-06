@@ -1,8 +1,10 @@
 #pragma once
+#include "GameScene.h"
+
 class Game
 {
 public:
-    Game() : m_isGameRunning(true) {}
+    Game();
     ~Game();
     void initialize();
     void draw();
@@ -11,5 +13,7 @@ public:
 
 private:
     bool m_isGameRunning;
+    
+    std::unordered_map<std::string, std::unique_ptr<Scene>> m_sceneList;
 };
 

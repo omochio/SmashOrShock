@@ -5,8 +5,7 @@
 #include "ThirdPartyHeaders/d3dx12.h"
 #include <DirectXMath.h>
 #include <wrl.h>
-#include "ThirdPartyHeaders//tiny_gltf.h"
-#include "Component.h"
+//#include "ThirdPartyHeaders//tiny_gltf.h"
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -14,14 +13,13 @@
 template<class T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-class RendererComponent :
-    public Component
+class Renderer
 {
 public:
     //Initialize static members
     void initialize(HWND hwnd);
     //Prepare individual GameObject Rendering
-    void prepare(std::string);
+    void prepare();
     void render();
     void Terminate();
 
@@ -107,8 +105,8 @@ private:
     ComPtr<ID3D12Resource1> createBuffer(UINT bufferSize, const void* initialData);
     TextureObject createTextureFromMemory(const std::vector<char>& imageData);
     void createIndividualDescriptorHeaps(UINT materialCount);
-    void makeModelGeometry(const tinygltf::Model& model);
-    void makeModelMaterial(const tinygltf::Model& model);
+    //void makeModelGeometry(const tinygltf::Model& model);
+    //void makeModelMaterial(const tinygltf::Model& model);
     ComPtr<ID3D12PipelineState> createOpaquePSO();
     ComPtr<ID3D12PipelineState> createAlphaPSO();
 

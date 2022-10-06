@@ -7,9 +7,7 @@ class Field :
 public:
     Field();
     ~Field();
-    void init();
-    void update();
-    void draw();
+    void update() override;
 private:
     
 };

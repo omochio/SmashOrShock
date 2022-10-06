@@ -1,8 +1,9 @@
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
-#define TINYGLTF_IMPLEMENTATION
+#define STBI_MSC_SECURE_CRT
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
+#define TINYGLTF_IMPLEMENTATION
 
 #include <Windows.h>
 #include <tchar.h>
@@ -89,6 +90,9 @@ int WINAPI WinMain(
     //ÉQÅ[ÉÄÉNÉâÉXèâä˙âª
     auto game = std::make_unique<Game>();
     game->initialize();
+
+    auto renderer = std::make_unique<Renderer>();
+    renderer->initialize(hWnd);
 
     ShowWindow(hWnd, nCmdShow);
 
