@@ -135,16 +135,73 @@ void RendererComponent::render()
         m_commandAllocators[m_frameIndex].Get(),
         nullptr
     );
-
+    
+    // Barrier transition
     auto barrierToRT = CD3DX12_RESOURCE_BARRIER::Transition(
         m_renderTargets[m_frameIndex].Get(),
         D3D12_RESOURCE_STATE_PRESENT,
         D3D12_RESOURCE_STATE_RENDER_TARGET);
     m_commandList->ResourceBarrier(1, &barrierToRT);
 
+    //Handles
     CD3DX12_CPU_DESCRIPTOR_HANDLE rtv(
         m_heapRTV->GetCPUDescriptorHandleForHeapStart(),
         m_frameIndex,
         m_rtvDescriptorSize
     );
+    CD3DX12_CPU_DESCRIPTOR_HANDLE dsv(
+        m_heapDSV->GetCPUDescriptorHandleForHeapStart()
+    );
+
+    //Clear color buffer
+    const float clearColor[] = { 0.1f, 0.25f, 0.5f, 0.0f };
+    m_commandList->ClearRenderTargetView(rtv, clearColor, 0, nullptr);
+
+    //Clear depth buffer
+    m_commandList->ClearDepthStencilView(dsv, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
+    //Set renderd targets
+    m_commandList->OMSetRenderTargets(1, &rtv, FALSE, &dsv);
+
+    //Set commands include draw command
+    setCommands();
+
+    //Barrier transition
+    auto barrierToPresent = CD3DX12_RESOURCE_BARRIER::Transition(
+        m_renderTargets[m_frameIndex].Get(),
+        D3D12_RESOURCE_STATE_RENDER_TARGET,
+        D3D12_RESOURCE_STATE_PRESENT
+    );
+    m_commandList->ResourceBarrier(1, &barrierToPresent);
+
+    m_commandList->Close();
+
+    ID3D12CommandList* lists[] = { m_commandList.Get() };
+    m_commandQueue->ExecuteCommandLists(1, lists);
+
+    m_swapchain->Present(1, 0);
+
+    waitPreviousFrame();
+}
+
+void RendererComponent::setCommands()
+{
+    
+}
+
+void RendererComponent::waitPreviousFrame()
+{
+    auto& fence = m_frameFence[m_frameIndex];
+    const auto currentValue = ++m_frameFenceValues[m_frameIndex];
+    m_commandQueue->Signal(fence.Get(), currentValue);
+
+    auto nextIndex = (m_frameIndex + 1) % FrameBufferCount;
+    const auto finishExpected = m_frameFenceValues[nextIndex];
+    const auto nextFenceValue = m_frameFence[nextIndex]->GetCompletedValue();
+    if (nextFenceValue < finishExpected)
+    {
+        m_frameFence[nextIndex]->SetEventOnCompletion(finishExpected, m_fenceWaitEvent);
+        WaitForSingleObject(m_fenceWaitEvent, GpuWaitTimeout);
+    }
+
 }

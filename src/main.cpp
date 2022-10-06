@@ -1,3 +1,9 @@
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+#define TINYGLTF_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+
 #include <Windows.h>
 #include <tchar.h>
 #include <memory>

@@ -1,9 +1,5 @@
 #pragma once
 
-#define TINYGLTF_IMPLEMENTATION
-#define STB_IMAGE_IMPLEMENTATION
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include "ThirdPartyHeaders/d3dx12.h"
@@ -30,6 +26,9 @@ public:
     void Terminate();
 
 private:
+    const UINT GpuWaitTimeout = (10 * 1000);
+    const UINT FrameBufferCount = 2;
+
     std::string(modelFilePath);
 
     void createCommonDescriptorHeaps();
@@ -43,7 +42,7 @@ private:
         const std::wstring& profile,
         ComPtr<ID3DBlob>& shaderBlob,
         ComPtr<ID3DBlob>& errorBlob);
-    void makeCommand();
+    void setCommands();
 
     static ComPtr<ID3D12Device> m_device;
     static ComPtr<ID3D12CommandQueue> m_commandQueue;
