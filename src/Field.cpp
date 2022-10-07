@@ -2,11 +2,7 @@
 
 Field::Field()
 {
-    m_modelPath = "Resources/Field";
-}
-
-Field::~Field()
-{
+    modelID = 0;
 }
 
 void Field::update()

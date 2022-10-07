@@ -5,7 +5,8 @@
 #include "ThirdPartyHeaders/d3dx12.h"
 #include <DirectXMath.h>
 #include <wrl.h>
-//#include "ThirdPartyHeaders//tiny_gltf.h"
+#include <stdexcept>
+#include "ThirdPartyHeaders/tiny_gltf.h"
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -16,18 +17,19 @@ using ComPtr = Microsoft::WRL::ComPtr<T>;
 class Renderer
 {
 public:
-    //Initialize static members
+    Renderer();
+    //Initialize common members
     void initialize(HWND hwnd);
-    //Prepare individual GameObject Rendering
-    void prepare();
+    //Prepare for individual GameObject Rendering
+    void prepare(UINT modelID);
     void render();
     void Terminate();
 
 private:
-    const UINT GpuWaitTimeout = (10 * 1000);
-    const UINT FrameBufferCount = 2;
+    const inline static UINT m_gpuWaitTimeout = (10 * 1000);
+    const inline static UINT m_frameBufferCount = 2;
 
-    std::string(modelFilePath);
+    //std::string(modelFilePath);
 
     void createCommonDescriptorHeaps();
     void createRenderTargetView();
@@ -42,25 +44,36 @@ private:
         ComPtr<ID3DBlob>& errorBlob);
     void setCommands();
 
-    static ComPtr<ID3D12Device> m_device;
-    static ComPtr<ID3D12CommandQueue> m_commandQueue;
-    static ComPtr<IDXGISwapChain4> m_swapchain;
-    static ComPtr<ID3D12DescriptorHeap> m_heapRTV;
-    static ComPtr<ID3D12DescriptorHeap> m_heapDSV;
-    static std::vector<ComPtr<ID3D12Resource1>> m_renderTargets;
-    static ComPtr<ID3D12Resource1> m_depthBuffer;
-    static CD3DX12_VIEWPORT m_viewport;
-    static CD3DX12_RECT m_scissorRect;
-    static UINT m_rtvDescriptorSize;
-    static UINT m_SRVCBVDescriptorSize;
-    static std::vector<ComPtr<ID3D12CommandAllocator>> m_commandAllocators;
-    static HANDLE m_fenceWaitEvent;
-    static std::vector<ComPtr<ID3D12Fence1>> m_frameFence;
-    static std::vector<UINT64> m_frameFenceValues;
-    static ComPtr<ID3D12GraphicsCommandList> m_commandList;
-    static UINT m_frameIndex;
-    const static UINT m_frameBufferCount = 2;
+    inline static ComPtr<ID3D12Device> m_device;
+    inline static ComPtr<ID3D12CommandQueue> m_commandQueue;
+    inline static ComPtr<IDXGISwapChain4> m_swapchain;
+    inline static ComPtr<ID3D12DescriptorHeap> m_heapRTV;
+    inline static ComPtr<ID3D12DescriptorHeap> m_heapDSV;
+    inline static std::vector<ComPtr<ID3D12Resource1>> m_renderTargets;
+    inline static ComPtr<ID3D12Resource1> m_depthBuffer;
+    inline static CD3DX12_VIEWPORT m_viewport;
+    inline static CD3DX12_RECT m_scissorRect;
+    inline static UINT m_rtvDescriptorSize;
+    inline static UINT m_SRVCBVDescriptorSize;
+    inline static std::vector<ComPtr<ID3D12CommandAllocator>> m_commandAllocators;
+    inline static HANDLE m_fenceWaitEvent;
+    inline static std::vector<ComPtr<ID3D12Fence1>> m_frameFences;
+    inline static std::vector<UINT64> m_frameFenceValues;
+    inline static ComPtr<ID3D12GraphicsCommandList> m_commandList;
+    inline static UINT m_frameIndex;
 
+    struct Vertex
+    {
+        DirectX::XMFLOAT3 Pos;
+        DirectX::XMFLOAT3 Normal;
+    };
+
+    struct ShaderParameters
+    {
+        DirectX::XMFLOAT4X4 mtxWorld;
+        DirectX::XMFLOAT4X4 mtxView;
+        DirectX::XMFLOAT4X4 mtxProj;
+    };
 
     struct BufferObject
     {
@@ -103,17 +116,17 @@ private:
     void waitGPU();
 
     ComPtr<ID3D12Resource1> createBuffer(UINT bufferSize, const void* initialData);
-    TextureObject createTextureFromMemory(const std::vector<char>& imageData);
+    //TextureObject createTextureFromMemory(const std::vector<char>& imageData);
     void createIndividualDescriptorHeaps(UINT materialCount);
-    //void makeModelGeometry(const tinygltf::Model& model);
-    //void makeModelMaterial(const tinygltf::Model& model);
+    void makeModelGeometry(const std::shared_ptr<tinygltf::Model> model);
+    void makeModelMaterial(const std::shared_ptr<tinygltf::Model> model);
     ComPtr<ID3D12PipelineState> createOpaquePSO();
     ComPtr<ID3D12PipelineState> createAlphaPSO();
 
     ComPtr<ID3D12DescriptorHeap> m_heapSRVCBV;
     ComPtr<ID3D12DescriptorHeap> m_heapSampler;
     UINT  m_samplerDescriptorSize;
-    UINT  m_SRVDescriptorBase;
+    UINT  m_srvDescriptorBase;
 
     ComPtr<ID3D12RootSignature> m_rootSignature;
     ComPtr<ID3D12PipelineState> m_pipelineOpaque, m_pipelineAlpha;
@@ -126,6 +139,11 @@ private:
 
     ComPtr<ID3DBlob> m_vs;
     ComPtr<ID3DBlob> m_psOpaque, m_psAlpha;
+
+    tinygltf::Model* getModel(std::string modelPath);
+    void loadModel(std::string path);
+    inline static std::unordered_map<std::string, std::shared_ptr<tinygltf::Model>> m_modelList;
+    inline static std::vector<std::string> m_modelPathList;
 
 };
 

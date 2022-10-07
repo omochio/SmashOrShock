@@ -1,13 +1,10 @@
 #pragma once
 #include "GameObject.h"
-
-class Field :
+class Player :
     public GameObject
 {
 public:
-    Field();
+    Player();
     void update() override;
-private:
-    
 };
 

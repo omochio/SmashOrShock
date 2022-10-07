@@ -24,6 +24,7 @@ protected:
     DirectX::XMVECTOR m_position = { 0.0f, 0.0f, 0.0f, 1.0f };
     //Renderer
     std::unique_ptr<Renderer> m_renderer;
-    std::string m_modelPath;
+    
+    UINT modelID;
 };
 
