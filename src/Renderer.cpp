@@ -504,34 +504,43 @@ void Renderer::makeModelGeometry(const std::shared_ptr<tinygltf::Model> model)
         {
             std::vector<Vertex> vertices;
             std::vector<uint32_t> indices;
-
+            
             //Fetch accessors
             const auto& accPos = model->accessors[meshPrimitive.attributes.at("POSITION")];
             const auto& accNrm = model->accessors[meshPrimitive.attributes.at("NORMAL")];
+            const auto& accIdx = model->accessors[meshPrimitive.indices];
             
             //Fetch buffer views
             const auto& bvPos = model->bufferViews[accPos.bufferView];
             const auto& bvNrm = model->bufferViews[accNrm.bufferView];
+            const auto& bvIdx = model->bufferViews[accIdx.bufferView];
 
-            //Fetch buffer
-            auto vertPos = bPos = model
+            //Fetch buffers
+            const auto& bPos = model->buffers[bvPos.buffer];
+            const auto& bNrm = model->buffers[bvNrm.buffer];
+            const auto& bIdx = model->buffers[bvIdx.buffer];
             
-            auto vertexCount = model->accessors.;
-            for (uint32_t i = 0; i < vertexCount; ++i)
+            //Fetch vertex data
+            const float* vertPos = reinterpret_cast<const float*>(&bPos.data[bvPos.byteOffset + accPos.byteOffset]);
+            const float* vertNrm = reinterpret_cast<const float*>(&bNrm.data[bvNrm.byteOffset + accPos.byteOffset]);
+
+            //Assemble vertex data
+            auto vertCount = accPos.count;
+            for (uint32_t i = 0; i < vertCount; ++i)
             {
-                // 頂点データの構築
                 int vid0 = 3 * i, vid1 = 3 * i + 1, vid2 = 3 * i + 2;
-                int tid0 = 2 * i, tid1 = 2 * i + 1;
                 vertices.emplace_back(
-                    Vertex{
-                      XMFLOAT3(vertPos[vid0], vertPos[vid1],vertPos[vid2]),
-                      XMFLOAT3(vertNrm[vid0], vertNrm[vid1],vertNrm[vid2]),
-                      XMFLOAT2(vertUV[tid0],vertUV[tid1])
+                    Vertex
+                    {
+                      DirectX::XMFLOAT3(vertPos[vid0], vertPos[vid1],vertPos[vid2]),
+                      DirectX::XMFLOAT3(vertNrm[vid0], vertNrm[vid1],vertNrm[vid2]),
                     }
                 );
             }
-            // インデックスデータ
-            indices = reader->ReadBinaryData<uint32_t>(doc, accIndex);
+
+            //Fetch index data
+            const uint32_t* idc = reinterpret_cast<const uint32_t*>(&bIdx.data[bvIdx.byteOffset + accPos.byteOffset]);
+            indices.assign(idc, idc + accIdx.count - 1);
 
             auto vbSize = UINT(sizeof(Vertex) * vertices.size());
             auto ibSize = UINT(sizeof(uint32_t) * indices.size());
