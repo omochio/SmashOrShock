@@ -10,6 +10,10 @@ GameScene::GameScene()
 
 void GameScene::update()
 {
-    m_gameObjectList[0]->draw();
+    for (size_t i = 0; i < m_gameObjectList.size(); ++i)
+    {
+        m_gameObjectList[i]->update();
+    }
+
 }
 

@@ -107,6 +107,7 @@ int WINAPI WinMain(
             break;
         }
         
+        game->update();
         game->draw();
     }
 

@@ -24,6 +24,7 @@ public:
     void prepare(UINT modelID);
     void render();
     void terminate();
+    float delta = -1.0f;
 
 private:
     const inline static UINT m_gpuWaitTimeout = (10 * 1000);

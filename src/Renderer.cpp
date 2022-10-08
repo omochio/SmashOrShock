@@ -311,11 +311,12 @@ void Renderer::setCommands()
 {
     ShaderParameters shaderParams;
     XMStoreFloat4x4(&shaderParams.mtxWorld, DirectX::XMMatrixRotationAxis(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), DirectX::XMConvertToRadians(0.0f)));
+    auto eye = DirectX::XMVectorSet(-4.0, 5.0f, -5.0f, 0.0f);
+    eye = DirectX::XMVector4Transform(eye, DirectX::XMMatrixRotationY(DirectX::XM_PIDIV4 * delta));
     auto mtxView = DirectX::XMMatrixLookAtLH(
-        DirectX::XMVectorSet(-4.0f, 5.0f, -5.0f, 0.0f),
+        eye,
         DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f),
-        DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)
-    );
+        DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
     auto mtxProj = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(45.0f), m_viewport.Width / m_viewport.Height, 0.1f, 100.0f);
     XMStoreFloat4x4(&shaderParams.mtxView, XMMatrixTranspose(mtxView));
     XMStoreFloat4x4(&shaderParams.mtxProj, XMMatrixTranspose(mtxProj));

@@ -22,6 +22,7 @@ void Game::draw()
 
 void Game::update()
 {
+    m_sceneList["GameScene"]->update();
 }
 
 void Game::terminate()

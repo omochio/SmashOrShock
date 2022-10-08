@@ -7,4 +7,5 @@ Player::Player()
 
 void Player::update()
 {
+    m_renderer->delta -= 0.1;
 }
