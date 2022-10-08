@@ -11,7 +11,7 @@
 - d3dx12.h
   - https://github.com/microsoft/DirectXTK12/blob/main/Src/d3dx12.h
   - Licensed under the MIT License: https://opensource.org/licenses/MIT
-- d3d12_book_1
+- d3d12_book_1 (一部)
   - https://github.com/techlabxe/d3d12_book_1
   - Licensed under the MIT License: https://opensource.org/licenses/MIT
   
