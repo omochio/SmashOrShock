@@ -4,6 +4,7 @@
 #include <dxgi1_6.h>
 #include "ThirdPartyHeaders/d3dx12.h"
 #include <DirectXMath.h>
+#include <DirectXTex.h>
 #include <wrl.h>
 #include <stdexcept>
 #include "ThirdPartyHeaders/tiny_gltf.h"
@@ -17,13 +18,12 @@ using ComPtr = Microsoft::WRL::ComPtr<T>;
 class Renderer
 {
 public:
-    Renderer();
     //Initialize common members
     void initialize(HWND hwnd);
     //Prepare for individual GameObject Rendering
     void prepare(UINT modelID);
     void render();
-    void Terminate();
+    void terminate();
 
 private:
     const inline static UINT m_gpuWaitTimeout = (10 * 1000);
@@ -54,7 +54,7 @@ private:
     inline static CD3DX12_VIEWPORT m_viewport;
     inline static CD3DX12_RECT m_scissorRect;
     inline static UINT m_rtvDescriptorSize;
-    inline static UINT m_SRVCBVDescriptorSize;
+    inline static UINT m_srvCBVDescriptorSize;
     inline static std::vector<ComPtr<ID3D12CommandAllocator>> m_commandAllocators;
     inline static HANDLE m_fenceWaitEvent;
     inline static std::vector<ComPtr<ID3D12Fence1>> m_frameFences;
@@ -105,13 +105,21 @@ private:
     {
         ComPtr<ID3D12Resource1> texture;
         CD3DX12_GPU_DESCRIPTOR_HANDLE shaderResourceView;
+        std::string alphaMode;
     };
 
     struct Model
     {
         std::vector<ModelMesh> meshes;
-        std::vector<Material>  materials;
     };
+
+    enum
+    {
+        ConstantBufferDescriptorBase = 0,
+        // サンプラーは別ヒープなので先頭を使用
+        SamplerDescriptorBase = 0,
+    };
+
 
     void waitGPU();
 
@@ -119,9 +127,9 @@ private:
     //TextureObject createTextureFromMemory(const std::vector<char>& imageData);
     void createIndividualDescriptorHeaps(UINT materialCount);
     void makeModelGeometry(const std::shared_ptr<tinygltf::Model> model);
-    void makeModelMaterial(const std::shared_ptr<tinygltf::Model> model);
-    ComPtr<ID3D12PipelineState> createOpaquePSO();
-    ComPtr<ID3D12PipelineState> createAlphaPSO();
+    //void makeModelMaterial(const std::shared_ptr<tinygltf::Model> model);
+    //TextureObject createTextureFromMemory(const std::vector<const unsigned char>& imageData);
+    ComPtr<ID3D12PipelineState> createPipelineState();
 
     ComPtr<ID3D12DescriptorHeap> m_heapSRVCBV;
     ComPtr<ID3D12DescriptorHeap> m_heapSampler;
@@ -129,7 +137,7 @@ private:
     UINT  m_srvDescriptorBase;
 
     ComPtr<ID3D12RootSignature> m_rootSignature;
-    ComPtr<ID3D12PipelineState> m_pipelineOpaque, m_pipelineAlpha;
+    ComPtr<ID3D12PipelineState> m_pipelineState;
     std::vector<ComPtr<ID3D12Resource1>> m_constantBuffers;
 
     D3D12_GPU_DESCRIPTOR_HANDLE m_sampler;
@@ -138,7 +146,7 @@ private:
     Model m_model;
 
     ComPtr<ID3DBlob> m_vs;
-    ComPtr<ID3DBlob> m_psOpaque, m_psAlpha;
+    ComPtr<ID3DBlob> m_ps;
 
     tinygltf::Model* getModel(std::string modelPath);
     void loadModel(std::string path);

@@ -2,7 +2,7 @@
 
 Player::Player()
 {
-    modelID = 1;
+    m_modelID = 1;
 }
 
 void Player::update()

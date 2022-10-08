@@ -10,6 +10,7 @@ public:
     void initialize();
     virtual void update() = 0;
     void draw();
+    void terminate();
 
     /// <summary>
     /// Œ»İ‚ÌÀ•W‚ğæ“¾
@@ -25,6 +26,6 @@ protected:
     //Renderer
     std::unique_ptr<Renderer> m_renderer;
     
-    UINT modelID;
+    UINT m_modelID;
 };
 

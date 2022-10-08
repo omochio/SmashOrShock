@@ -87,12 +87,11 @@ int WINAPI WinMain(
         return 1;
     }
 
-    //ƒQ[ƒ€ƒNƒ‰ƒX‰Šú‰»
-    auto game = std::make_unique<Game>();
-    game->initialize();
-
     auto renderer = std::make_unique<Renderer>();
     renderer->initialize(hWnd);
+
+    auto game = std::make_unique<Game>();
+    game->initialize();
 
     ShowWindow(hWnd, nCmdShow);
 
@@ -108,15 +107,10 @@ int WINAPI WinMain(
             break;
         }
         
-        /*
-        if (msg.message == WM_QUIT) {
-            break;
-        }
-        */
-
         game->draw();
-
     }
+
+    game->terminate();
 
     UnregisterClass(wcex.lpszClassName, wcex.hInstance);
     return  (int)msg.wParam;

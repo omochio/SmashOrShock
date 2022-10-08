@@ -2,7 +2,7 @@
 
 Enemy::Enemy()
 {
-    modelID = 2;
+    m_modelID = 2;
 }
 
 void Enemy::update()

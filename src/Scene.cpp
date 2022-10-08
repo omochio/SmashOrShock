@@ -23,3 +23,10 @@ void Scene::draw()
 
 }
 
+void Scene::terminate()
+{
+    for (size_t i = 0; i < m_gameObjectList.size(); ++i)
+    {
+        m_gameObjectList[i]->terminate();
+    }
+}

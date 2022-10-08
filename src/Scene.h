@@ -13,7 +13,7 @@ public:
     void initialize();
     virtual void update() = 0;
     void draw();
-    virtual void reset() = 0;
+    void terminate();
 
 protected:
     std::vector<std::unique_ptr<GameObject>> m_gameObjectList;

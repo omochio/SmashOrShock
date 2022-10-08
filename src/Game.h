@@ -9,6 +9,7 @@ public:
     void initialize();
     void draw();
     void update();
+    void terminate();
     const bool getIsGameRunning();
 
 private:

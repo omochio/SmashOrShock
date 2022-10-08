@@ -10,6 +10,5 @@ class GameScene :
 public:
     GameScene();
     void update() override;
-    void reset() override;
 };
 

@@ -24,6 +24,11 @@ void Game::update()
 {
 }
 
+void Game::terminate()
+{
+    m_sceneList["GameScene"]->terminate();
+}
+
 const bool Game::getIsGameRunning()
 {
     return m_isGameRunning;

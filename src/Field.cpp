@@ -2,7 +2,7 @@
 
 Field::Field()
 {
-    modelID = 0;
+    m_modelID = 0;
 }
 
 void Field::update()
